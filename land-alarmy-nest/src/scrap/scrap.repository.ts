@@ -13,6 +13,7 @@ export class ScrapRepository {
         'code_ko_detail.txt',
       );
       const data = fs.readFileSync(filePath, 'utf-8');
+      console.log('저장된 데이터 개수 : ', data.length);
       return data;
     } catch (err) {
       console.error(err);
@@ -23,16 +24,16 @@ export class ScrapRepository {
     const filePath = path.join(__dirname, '../../', 'assets', 'code_ko.txt');
     let data = fs.readFileSync(filePath, 'utf-8');
     let ndata = data.split('\n');
-    let result = [];
+    let result = {};
     for (let i = 0; i < ndata.length; i++) {
       if (i === 0) continue;
       let [code, name, isExist] = ndata[i].split('\t');
       if (isExist) isExist = isExist.replace('\r', '');
-      if (code.slice(5) === '00000') {
-        result.push(code + ' ' + name + ' ' + isExist);
+      if (code.slice(5) === '00000' && isExist === '존재') {
+        result[code] = code + ' ' + name + ' ' + isExist;
       }
     }
-    let nResult = result.join('\n');
+    let nResult = Object.values(result).join('\n');
     const nfilePath = path.join(
       __dirname,
       '../../',

@@ -10,6 +10,9 @@ export class ScrapService {
     private configService: ConfigService,
   ) {}
   async getLocalCodes() {
+    return this.scrapRepository.getLocalCodes();
+  }
+  async setLocalCodes() {
     return this.scrapRepository.setLocalCode();
   }
   //국토교통부 단독/다가구 전월세 자료

@@ -13,4 +13,9 @@ export class ScrapController {
   getRTMSDataSvcSHRent() {
     return this.scrapService.getRTMSDataSvcSHRent();
   }
+
+  @Get('setLocalCodes')
+  setLocalCodes() {
+    return this.scrapService.setLocalCodes();
+  }
 }
