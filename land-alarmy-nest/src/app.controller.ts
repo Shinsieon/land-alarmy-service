@@ -7,7 +7,8 @@ export class AppController {
 
   @Get('/')
   getHello(): string {
-    this.appService.getLandInfo();
-    return this.appService.getHello();
+    //return this.appService.getLandInfo();
+    return this.appService.getLandCode();
+    //return this.appService.getHello();
   }
 }

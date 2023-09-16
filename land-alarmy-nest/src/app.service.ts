@@ -1,10 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import * as request from 'request';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class AppService {
   getHello(): string {
     return 'Hello World!';
+  }
+  getLandCode(): string {
+    try {
+      const filePath = path.join(__dirname, '../', 'assets', 'code.txt');
+      const data = fs.readFileSync(filePath, 'utf-8');
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
   }
   getLandInfo(): Promise<any> {
     const url =
