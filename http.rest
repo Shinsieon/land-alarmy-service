@@ -1,1 +1,4 @@
-GET http://localhost:4000 HTTP/1.1
+GET http://localhost:4000/scrap/localCodes HTTP/1.1
+
+###
+GET http://localhost:4000/scrap/getRTMSDataSvcSHRent HTTP/1.1
