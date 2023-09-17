@@ -5,3 +5,9 @@ GET http://localhost:4000/scrap/getRTMSDataSvcSHRent HTTP/1.1
 
 ###
 GET http://localhost:4000/scrap/setLocalCodes HTTP/1.1
+
+###
+POST http://localhost:4000/sms/send HTTP/1.1
+
+###
+GET http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcLandTrade?serviceKey=P+/y/R84yS9jBDWOea6o+ooWcZ1t9SRKQaKK23tR2DeF8HGCMh+61cTAFpV71qF7HdooH1nZsvvv8MtVGq71Fw== HTTP/1.1

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 @Injectable()
@@ -22,9 +22,9 @@ export class ScrapRepository {
   //공공데이터포털에서 저장한 법정동코드를 시/군/구 에 따라 그룹핑해서 저장합니다.
   async setLocalCode(): Promise<void> {
     const filePath = path.join(__dirname, '../../', 'assets', 'code_ko.txt');
-    let data = fs.readFileSync(filePath, 'utf-8');
-    let ndata = data.split('\n');
-    let result = {};
+    const data = fs.readFileSync(filePath, 'utf-8');
+    const ndata = data.split('\n');
+    const result = {};
     for (let i = 0; i < ndata.length; i++) {
       if (i === 0) continue;
       let [code, name, isExist] = ndata[i].split('\t');
@@ -33,7 +33,7 @@ export class ScrapRepository {
         result[code] = code + ' ' + name + ' ' + isExist;
       }
     }
-    let nResult = Object.values(result).join('\n');
+    const nResult = Object.values(result).join('\n');
     const nfilePath = path.join(
       __dirname,
       '../../',
