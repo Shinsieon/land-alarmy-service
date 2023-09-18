@@ -21,7 +21,58 @@ export type TLocalCodes = {
 };
 function App() {
   const [data, setData] = useState<TLocalCodes[]>([]);
-  const sizeChange = () => {};
+  const [code, setCode] = useState("");
+  const [tradeType, setTradeType] = useState({
+    all: true,
+    buy: false,
+    rentForYear: false,
+    rentForMonth: false,
+  });
+  const [price, setPrice] = useState([10, 10]);
+  const [size, setSize] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const codeChange = (e, value) => {
+    if (value && value.code) setCode(value.code);
+    else setCode("");
+  };
+  const tradeChange = (e) => {
+    setTradeType({
+      ...tradeType,
+      [e.target.name]: e.target.checked,
+    });
+  };
+  const { all, buy, rentForMonth, rentForYear } = tradeType;
+  const error =
+    [all, buy, rentForMonth, rentForYear].filter((v) => v).length > 1;
+
+  const priceChangeMin = (e) => {
+    const [min, max] = [...price];
+
+    if (e.target.value) {
+      setPrice([parseInt(e.target.value), max]);
+    } else setPrice([0, max]);
+  };
+  const priceChangeMax = (e) => {
+    const [min, max] = [...price];
+    setPrice([min, parseInt(e.target.value)]);
+  };
+  const sizeChange = (e) => {
+    setSize(e.target.value);
+  };
+  const phoneChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+  const submitBtnClicked = () => {
+    const sendParams = {
+      code,
+      tradeType,
+      price,
+      size,
+      phoneNumber,
+    };
+    console.log(sendParams);
+    //if(!sendParams.code)
+  };
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:4000/scrap/localCodes");
@@ -30,7 +81,6 @@ function App() {
       if (res.status === 200) {
         console.log(res.data);
         const data = res.data.split("\n");
-        console.log("데이터 개수: ", data.length);
         for (let i = 0; i < data.length; i++) {
           const codeItem = data[i].split(" ");
           if (codeItem.length === 4) {
@@ -45,7 +95,6 @@ function App() {
           }
         }
       }
-      console.log(localCodes);
       return localCodes;
     };
 
@@ -64,70 +113,118 @@ function App() {
         }}
       >
         <Typography variant="h4">매물 알리미 서비스 등록</Typography>
+        <FormControl
+          required
+          error={code === ""}
+          component="fieldset"
+          variant="standard"
+        >
+          <FormLabel>원하는 지역을 입력해주세요</FormLabel>
+          <Autocomplete
+            disablePortal
+            options={data}
+            size="small"
+            sx={{ width: "100%", mt: 1 }}
+            onChange={codeChange}
+            renderInput={(params) => <TextField {...params} label="시/군/구" />}
+          />
+        </FormControl>
+        <FormControl
+          required
+          error={error}
+          component="fieldset"
+          variant="standard"
+        >
+          <FormLabel component="legend">
+            거래 유형 {error ? "* 한 가지 유형만 선택해주세요" : ""}
+          </FormLabel>
 
-        <FormLabel>
-          <b>원하는 지역을 입력해주세요</b>
-        </FormLabel>
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={data}
-          size="small"
-          sx={{ width: "100%" }}
-          renderInput={(params) => <TextField {...params} label="시/군/구" />}
-        />
-        <FormLabel>
-          <b>거래방식</b>
-        </FormLabel>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+          <FormGroup
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox checked={all} onChange={tradeChange} name="all" />
+              }
+              label="전체"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={buy} onChange={tradeChange} name="buy" />
+              }
+              label="매매"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rentForYear}
+                  onChange={tradeChange}
+                  name="rentForYear"
+                />
+              }
+              label="전세"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rentForMonth}
+                  onChange={tradeChange}
+                  name="rentForMonth"
+                />
+              }
+              label="월세"
+            />
+          </FormGroup>
+        </FormControl>
+        <FormControl
+          required
+          error={price[1] === 0}
+          component="fieldset"
+          variant="standard"
         >
-          <FormControlLabel
-            control={<Checkbox defaultChecked />}
-            label="전체"
-          />
-          <FormControlLabel control={<Checkbox />} label="매매" />
-          <FormControlLabel control={<Checkbox />} label="전세" />
-          <FormControlLabel control={<Checkbox />} label="월세" />
-        </Box>
-        <FormLabel>
-          <b>가격대</b>
-        </FormLabel>
-        <FormGroup
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            justifyContent: "space-between",
-          }}
-        >
-          <TextField
-            size="small"
-            id="outlined-basic"
-            label="최저가"
-            variant="outlined"
-          />
-          <Typography> ~ </Typography>
-          <TextField
-            size="small"
-            id="outlined-basic"
-            label="최대가"
-            variant="outlined"
-          />
-        </FormGroup>
-        <FormLabel>
-          <b>평수</b>
-        </FormLabel>
+          <FormLabel>가격대</FormLabel>
+          <FormGroup
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              mt: 1,
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="최저가"
+              size="small"
+              variant="outlined"
+              value={price[0]}
+              onChange={priceChangeMin}
+              sx={{ width: "150px" }}
+            />
+            <Typography variant="body2"> 천만원 </Typography>
+            <Typography> ~ </Typography>
+            <TextField
+              size="small"
+              id="outlined-basic"
+              label="최대가"
+              variant="outlined"
+              value={price[1]}
+              onChange={priceChangeMax}
+              sx={{ width: "150px" }}
+            />
+            <Typography> 천만원 </Typography>
+          </FormGroup>
+        </FormControl>
+        <FormLabel>평수</FormLabel>
 
         <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={0}
+            value={size}
             fullWidth={true}
             label="Age"
             onChange={sizeChange}
@@ -142,17 +239,30 @@ function App() {
             <MenuItem value={7}>70평~</MenuItem>
           </Select>
         </FormGroup>
-        <FormLabel>
-          <b>휴대전화 번호</b>
-        </FormLabel>
-        <TextField
-          size="small"
-          id="outlined-basic"
-          label="Phone number"
-          variant="outlined"
-          type="tel"
-        />
-        <Button variant="contained" size="large" sx={{ margin: "25px 0" }}>
+
+        <FormControl
+          required
+          error={phoneNumber === ""}
+          component="fieldset"
+          variant="standard"
+        >
+          <FormLabel required>휴대전화 번호</FormLabel>
+          <TextField
+            size="small"
+            label="Phone number"
+            variant="outlined"
+            type="tel"
+            value={phoneNumber}
+            onChange={phoneChange}
+          />
+        </FormControl>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ margin: "25px 0" }}
+          onClick={submitBtnClicked}
+          type="submit"
+        >
           Submit
         </Button>
       </FormControl>
