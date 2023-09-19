@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Request } from '@nestjs/common';
 import { ScrapService } from './scrap.service';
 
 @Controller('scrap')
@@ -10,8 +10,10 @@ export class ScrapController {
   }
 
   @Get('getRTMSDataSvcSHRent')
-  getRTMSDataSvcSHRent() {
-    return this.scrapService.getRTMSDataSvcSHRent();
+  getRTMSDataSvcSHRent(@Request() req) {
+    console.log(req.body);
+    return 'hllo';
+    //return this.scrapService.getRTMSDataSvcSHRent();
   }
 
   @Get('setLocalCodes')

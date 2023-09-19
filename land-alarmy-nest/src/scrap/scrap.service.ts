@@ -17,7 +17,6 @@ export class ScrapService {
   }
   //국토교통부 단독/다가구 전월세 자료
   async getRTMSDataSvcSHRent(): Promise<any> {
-    console.log(process.env);
     const url =
       'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent';
     let queryParams =
