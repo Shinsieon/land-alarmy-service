@@ -15,6 +15,6 @@ export class AppController {
 
   @Post('register')
   async register(@Body() userDto: CreateUserDto): Promise<string> {
-    return await this.appService.register;
+    return await this.appService.register();
   }
 }
