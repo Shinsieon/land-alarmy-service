@@ -12,8 +12,7 @@ export class ScrapController {
   @Get('getRTMSDataSvcSHRent')
   getRTMSDataSvcSHRent(@Request() req) {
     console.log(req.body);
-    return 'hllo';
-    //return this.scrapService.getRTMSDataSvcSHRent();
+    return this.scrapService.getRTMSDataSvcSHRent();
   }
 
   @Get('setLocalCodes')

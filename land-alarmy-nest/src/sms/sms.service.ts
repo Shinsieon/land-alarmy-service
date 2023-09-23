@@ -32,7 +32,7 @@ export class SmsService {
             'Content-Type': 'application/json; charset=utf-8',
             'x-ncp-apigw-timestamp': date,
             'x-ncp-iam-access-key': '7xA30SkAVKnoWzpU0HLr',
-            'x-ncp-apigw-signature-v2': this.makeSignature(url),
+            'x-ncp-apigw-signature-v2': this.makeSignature(),
           },
         },
       )
@@ -40,7 +40,7 @@ export class SmsService {
         console.log(res);
       });
   }
-  makeSignature(url: string) {
+  makeSignature() {
     const url2 =
       '/sms/v2/services/ncp:sms:kr:288109456790:land-alarmy/messages';
     const space = ' '; // one space

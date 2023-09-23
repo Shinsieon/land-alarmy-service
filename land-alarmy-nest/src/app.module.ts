@@ -3,18 +3,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ScrapModule } from './scrap/scrap.module';
 import { ConfigModule } from '@nestjs/config';
-import { SmsController } from './sms/sms.controller';
-import { SmsService } from './sms/sms.service';
 import { SmsModule } from './sms/sms.module';
+import { UserModule } from './user/user.module';
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     ScrapModule,
     SmsModule,
+    UserModule,
   ],
-  controllers: [AppController, SmsController],
-  providers: [AppService, SmsService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -12,7 +12,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
 import { useEffect, useState } from "react";
 
 export type TLocalCodes = {
@@ -70,8 +70,23 @@ function App() {
       size,
       phoneNumber,
     };
-    console.log(sendParams);
-    //if(!sendParams.code)
+    if (
+      !code ||
+      !phoneNumber ||
+      (price[0] === 0 && price[1] === 0) ||
+      Object.values(tradeType).filter((item) => item === true).length === 0
+    ) {
+      alert("값을 확인해주세요");
+      return;
+    }
+    axios
+      .post("http://localhost:4000/user/register", sendParams)
+      .then((result) => {
+        console.log(result);
+        if (result.status === HttpStatusCode.Created) {
+          alert("등록 성공");
+        }
+      });
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +94,6 @@ function App() {
       let localCodes = [];
 
       if (res.status === 200) {
-        console.log(res.data);
         const data = res.data.split("\n");
         for (let i = 0; i < data.length; i++) {
           const codeItem = data[i].split(" ");
