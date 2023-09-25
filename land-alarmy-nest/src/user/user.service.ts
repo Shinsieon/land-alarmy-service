@@ -8,4 +8,7 @@ export class UserService {
   async register(userDto: CreateUserDto): Promise<boolean> {
     return await this.userRepository.register(userDto);
   }
+  async getAll(): Promise<CreateUserDto> {
+    return await this.userRepository.getAll();
+  }
 }

@@ -6,5 +6,6 @@ import { ScrapRepository } from './scrap.repository';
 @Module({
   controllers: [ScrapController],
   providers: [ScrapService, ScrapRepository],
+  exports: [ScrapService, ScrapRepository],
 })
 export class ScrapModule {}
