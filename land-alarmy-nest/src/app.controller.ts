@@ -42,6 +42,7 @@ export class AppController {
         if (localDataFromApi.totalCount == 0) return;
         localDataFromApi = localDataFromApi.items[0].item;
         console.log(localDataFromApi);
+        console.
 
         let localInfo: RTMSDataSvcSHRent_Inf = {
           code: localDataFromApi.code,
