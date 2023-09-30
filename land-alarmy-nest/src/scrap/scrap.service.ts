@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { parseStringPromise } from 'xml2js';
 import { ScrapRepository } from './scrap.repository';
 import { getOneMonthBefore } from 'src/lib/utils';
+import { UserInterface } from 'src/user/dto/user.dto';
+import { RTMSDataSvcSHRent_Inf } from 'src/interface/RTMSDataSvcSHRent.interface';
 @Injectable()
 export class ScrapService {
   MAX_TRY_COUNT: number;
@@ -18,6 +20,35 @@ export class ScrapService {
   }
   async setLocalCodes() {
     return this.scrapRepository.setLocalCode();
+  }
+  async getUserRTMSDataSvcSHRent(
+    user: UserInterface,
+  ): Promise<RTMSDataSvcSHRent_Inf[]> {
+    const [YYYY, MM, DD] = new Date().toISOString().slice(0, 10).split('-');
+    let localDataFromApi: any = (
+      await this.getRTMSDataSvcSHRent(user.code.slice(0, 5), YYYY + MM)
+    ).response.body[0];
+    if (localDataFromApi.totalCount == 0) return [];
+    localDataFromApi = localDataFromApi.items[0].item;
+    localDataFromApi = localDataFromApi.map((item) => {
+      return {
+        code: user.code,
+        useOfRenewalRequestRights: item['갱신요구권사용'],
+        contractClassification: item['계약구분'],
+        yearOfConstruction: item['건축년도'],
+        term: item['계약기간'],
+        size: item['계약면적'],
+        year: item['년'],
+        beopjeongDong: item['법정동'],
+        depositAmount: item['보증금액'],
+        month: item['월'],
+        monthlyRentAmount: item['월세금액'],
+        day: item['일'],
+        previousContractDeposit: item['종전계약보증금'],
+        previousContractMonthlyRent: item['종전계약월세'],
+      };
+    });
+    return localDataFromApi;
   }
   //국토교통부 단독/다가구 전월세 자료
   async getRTMSDataSvcSHRent(

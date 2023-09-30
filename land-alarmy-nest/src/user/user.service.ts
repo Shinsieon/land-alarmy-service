@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/user.dto';
+import { CreateUserDto, UserInterface } from 'src/user/dto/user.dto';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class UserService {
   async register(userDto: CreateUserDto): Promise<boolean> {
     return await this.userRepository.register(userDto);
   }
-  async getAll(): Promise<CreateUserDto> {
+  async getAll(): Promise<UserInterface[]> {
     return await this.userRepository.getAll();
   }
 }

@@ -1,4 +1,5 @@
 import { IsArray, IsNumber, IsString } from 'class-validator';
+import { RTMSDataSvcSHRent_Inf } from 'src/interface/RTMSDataSvcSHRent.interface';
 
 export class CreateUserDto {
   @IsString()

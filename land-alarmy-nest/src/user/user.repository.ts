@@ -13,7 +13,7 @@ export class UserRepository {
     await this.db.push(`/${userDto.phoneNumber}`, userDto, true);
     return true;
   }
-  async getAll(): Promise<CreateUserDto> {
+  async getAll(): Promise<UserInterface[]> {
     return await this.db.getData('/');
   }
 }
