@@ -4,6 +4,9 @@ export const getOneMonthBefore = (YYYYMM: string) => {
   if (Number(MM) - 1 === 0) {
     return (Number(YYYY) - 1).toString() + '12';
   } else {
-    return YYYY + (Number(MM) - 1).toString();
+    return (
+      YYYY +
+      (Number(MM) - 1 < 10 ? '0' + (Number(MM) - 1) : Number(MM) - 1).toString()
+    );
   }
 };

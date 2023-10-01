@@ -26,7 +26,7 @@ export class ScrapService {
   ): Promise<RTMSDataSvcSHRent_Inf[]> {
     const [YYYY, MM, DD] = new Date().toISOString().slice(0, 10).split('-');
     let localDataFromApi: any = (
-      await this.getRTMSDataSvcSHRent(user.code.slice(0, 5), YYYY + MM)
+      await this.getRTMSDataSvcSHRent(user.code.slice(0, 5), YYYY + MM, 0)
     ).response.body[0];
     if (localDataFromApi.totalCount == 0) return [];
     localDataFromApi = localDataFromApi.items[0].item;
@@ -50,11 +50,25 @@ export class ScrapService {
     });
     return localDataFromApi;
   }
+  getFilteredRTMSDataSvcSHRent(
+    user: UserInterface,
+    homes: RTMSDataSvcSHRent_Inf[],
+  ) {
+    homes = homes.filter(
+      (home) =>
+        Number(home.size[0]) < user.size * 10 + 10 &&
+        Number(home.depositAmount[0]) >= user.price[0] * 1000 &&
+        Number(home.depositAmount[0]) <= user.price[1] * 1000 &&
+        (user.tradeType.all === true || user.tradeType.rentForMonth === true) &&
+        home.monthlyRentAmount[0],
+    );
+    console.log(user, homes);
+  }
   //국토교통부 단독/다가구 전월세 자료
   async getRTMSDataSvcSHRent(
     CODE: string,
     YYYYMM: string,
-    TRY_COUNT = 0,
+    TRY_COUNT: number,
   ): Promise<any> {
     const url =
       'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent';
@@ -80,18 +94,20 @@ export class ScrapService {
           url: url + queryParams,
           method: 'GET',
         },
-        function (error, response, body) {
+        (error, response, body) => {
           if (error) rej(error);
           else {
             parseStringPromise(body).then((result) => {
               if (
-                result.body?.totalCount === '0' &&
+                result.response.body[0].totalCount[0] === '0' &&
                 TRY_COUNT < this.MAX_TRY_COUNT
               ) {
-                this.getRTMSDataSvcSHRent(
-                  CODE,
-                  getOneMonthBefore(YYYYMM),
-                  TRY_COUNT++,
+                res(
+                  this.getRTMSDataSvcSHRent(
+                    CODE,
+                    getOneMonthBefore(YYYYMM),
+                    TRY_COUNT + 1,
+                  ),
                 );
               } else res(result);
             });

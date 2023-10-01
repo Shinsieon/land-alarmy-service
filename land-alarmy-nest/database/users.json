@@ -1,1 +1,26 @@
-{"111":{"code":"1117000000","tradeType":{"all":true,"buy":false,"rentForYear":false,"rentForMonth":false},"price":[10,10],"size":0,"phoneNumber":"111"},"222":{"code":"1117000000","tradeType":{"all":true,"buy":false,"rentForYear":false,"rentForMonth":false},"price":[10,10],"size":0,"phoneNumber":"222"}}
+{
+  "111": {
+    "code": "1117000000",
+    "tradeType": {
+      "all": true,
+      "buy": false,
+      "rentForYear": false,
+      "rentForMonth": false
+    },
+    "price": [0, 10],
+    "size": 0,
+    "phoneNumber": "111"
+  },
+  "222": {
+    "code": "1117000000",
+    "tradeType": {
+      "all": true,
+      "buy": false,
+      "rentForYear": false,
+      "rentForMonth": false
+    },
+    "price": [0, 10],
+    "size": 0,
+    "phoneNumber": "222"
+  }
+}

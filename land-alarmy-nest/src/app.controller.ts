@@ -20,14 +20,20 @@ export class AppController {
     const users = await this.userService.getAll();
     let LocalInfos: { [key: string]: RTMSDataSvcSHRent_Inf[] } = {};
 
-    for (let user of users) {
+    for (const phoneNumber of Object.keys(users)) {
+      const user = users[phoneNumber];
       if (!LocalInfos[user.code]) {
         let localInfo = await this.scrapService.getUserRTMSDataSvcSHRent(user);
+        const filteredHomes = this.scrapService.getFilteredRTMSDataSvcSHRent(
+          user,
+          localInfo,
+        );
         LocalInfos[user.code] = localInfo;
+
+        //사용자가 요구하는 조건에 맞는 매물만 필터링합니다.
       }
     }
     //조건에 맞는 매물을 users 객체에 넣습니다.
-    console.log(LocalInfos['1117000000']);
   }
   onApplicationBootstrap() {
     this.run();

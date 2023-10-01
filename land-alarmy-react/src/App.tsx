@@ -200,7 +200,7 @@ function App() {
           component="fieldset"
           variant="standard"
         >
-          <FormLabel>가격대</FormLabel>
+          <FormLabel>보증금</FormLabel>
           <FormGroup
             sx={{
               display: "flex",
