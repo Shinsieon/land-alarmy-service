@@ -54,14 +54,16 @@ export class ScrapService {
     user: UserInterface,
     homes: RTMSDataSvcSHRent_Inf[],
   ) {
-    homes = homes.filter(
-      (home) =>
-        Number(home.size[0]) < user.size * 10 + 10 &&
-        Number(home.depositAmount[0]) >= user.price[0] * 1000 &&
-        Number(home.depositAmount[0]) <= user.price[1] * 1000 &&
-        (user.tradeType.all === true || user.tradeType.rentForMonth === true) &&
-        home.monthlyRentAmount[0],
-    );
+    // homes = homes.filter(
+    //   (home) =>
+    //     Number(home.size[0]) < user.size * 10 + 10 &&
+    //     Number(home.depositAmount[0]) >= user.price[0] * 1000 &&
+    //     Number(home.depositAmount[0]) <= user.price[1] * 1000 &&
+    //     (user.tradeType.all === true || user.tradeType.rentForMonth === true) &&
+    //     home.monthlyRentAmount[0],
+    // );
+    console.log(homes[0]);
+    homes = homes.filter((home) => Number(home.size[0]) < user.size * 10 + 30);
     console.log(user, homes);
   }
   //국토교통부 단독/다가구 전월세 자료
