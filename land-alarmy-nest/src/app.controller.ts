@@ -4,6 +4,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserService } from './user/user.service';
 import { ScrapService } from './scrap/scrap.service';
 import { RTMSDataSvcSHRent_Inf } from './interface/RTMSDataSvcSHRent.interface';
+import { SmsService } from './sms/sms.service';
 
 @Controller()
 export class AppController {
@@ -11,6 +12,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly userService: UserService,
     private readonly scrapService: ScrapService,
+    private readonly smsService: SmsService,
   ) {}
 
   @Cron(CronExpression.EVERY_10_HOURS)
@@ -31,6 +33,12 @@ export class AppController {
         user,
         localInfo,
       );
+      if (filteredHomes.length > 0) {
+        this.smsService.sendSms(
+          phoneNumber,
+          filteredHomes.map((home) => home.code).toString(),
+        );
+      }
     }
     //조건에 맞는 매물을 users 객체에 넣습니다.
   }

@@ -1,5 +1,5 @@
 {
-  "111": {
+  "01087265402": {
     "code": "1117000000",
     "tradeType": {
       "all": true,
@@ -9,18 +9,6 @@
     },
     "price": [0, 10],
     "size": 0,
-    "phoneNumber": "111"
-  },
-  "222": {
-    "code": "1117000000",
-    "tradeType": {
-      "all": true,
-      "buy": false,
-      "rentForYear": false,
-      "rentForMonth": false
-    },
-    "price": [0, 10],
-    "size": 0,
-    "phoneNumber": "222"
+    "phoneNumber": "01087265402"
   }
 }

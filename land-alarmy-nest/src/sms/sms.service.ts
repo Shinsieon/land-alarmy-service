@@ -6,9 +6,8 @@ import * as CryptoJS from 'crypto-js';
 @Injectable()
 export class SmsService {
   constructor(private configService: ConfigService) {}
-  async sendSms() {
-    const serviceId = 'ncp:sms:kr:288109456790:land-alarmy'; //this.configService.get
-    //('SENS_SERVICE_ID');
+  async sendSms(to: string, content: string) {
+    const serviceId = this.configService.get('SENS_SERVICE_ID');
     const url = `https://sens.apigw.ntruss.com/sms/v2/services/${serviceId}/messages`;
     const date = Date.now().toString();
 
@@ -20,10 +19,10 @@ export class SmsService {
           contentType: 'COMM',
           countryCode: '82',
           from: '01087265402',
-          content: 'hello',
+          content: content,
           messages: [
             {
-              to: '01087265402',
+              to: to,
             },
           ],
         },
@@ -37,7 +36,8 @@ export class SmsService {
         },
       )
       .then((res) => {
-        console.log(res);
+        if (res.data.statusCode == '202')
+          console.log(`${to} 에게 정상적으로 전송했습니다.`);
       });
   }
   makeSignature() {
@@ -60,7 +60,6 @@ export class SmsService {
     hmac.update(accessKey);
 
     const hash = hmac.finalize();
-    console.log(hash);
     return hash.toString(CryptoJS.enc.Base64);
   }
 }

@@ -7,6 +7,7 @@ import { SmsModule } from './sms/sms.module';
 import { UserModule } from './user/user.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { UserService } from './user/user.service';
+import { SmsService } from './sms/sms.service';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -16,8 +17,9 @@ import { UserService } from './user/user.service';
     ScrapModule,
     SmsModule,
     UserModule,
+    SmsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [AppService, UserService, SmsService],
 })
 export class AppModule {}

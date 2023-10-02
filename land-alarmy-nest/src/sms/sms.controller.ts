@@ -7,6 +7,6 @@ export class SmsController {
 
   @Post('send')
   async sendSms() {
-    this.smsService.sendSms();
+    this.smsService.sendSms('01087265402', 'test message');
   }
 }
