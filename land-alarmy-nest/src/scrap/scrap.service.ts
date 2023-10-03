@@ -5,7 +5,10 @@ import { parseStringPromise } from 'xml2js';
 import { ScrapRepository } from './scrap.repository';
 import { getOneMonthBefore } from 'src/lib/utils';
 import { UserInterface } from 'src/user/dto/user.dto';
-import { RTMSDataSvcSHRent_Inf } from 'src/interface/RTMSDataSvcSHRent.interface';
+import {
+  RTMSDataSvcAptRent_Inf,
+  RTMSDataSvcSHRent_Inf,
+} from 'src/interface/RTMSDataSvc.interface';
 @Injectable()
 export class ScrapService {
   MAX_TRY_COUNT: number;
@@ -26,7 +29,7 @@ export class ScrapService {
   ): Promise<RTMSDataSvcSHRent_Inf[]> {
     const [YYYY, MM, DD] = new Date().toISOString().slice(0, 10).split('-');
     let localDataFromApi: any = (
-      await this.getRTMSDataSvcSHRent(user.code.slice(0, 5), YYYY + MM, 0)
+      await this.getRTMSData('villa', user.code.slice(0, 5), YYYY + MM, 0)
     ).response.body[0];
     if (localDataFromApi.totalCount == 0) return [];
     localDataFromApi = localDataFromApi.items[0].item;
@@ -50,12 +53,42 @@ export class ScrapService {
     });
     return localDataFromApi;
   }
-  getFilteredRTMSDataSvcSHRent(
+  async getUserRTMSDataSvcApartRent<T>(user: UserInterface): Promise<T[]> {
+    const [YYYY, MM, DD] = new Date().toISOString().slice(0, 10).split('-');
+    let localDataFromApi: any = (
+      await this.getRTMSData('apart', user.code.slice(0, 5), YYYY + MM, 0)
+    ).response.body[0];
+    if (localDataFromApi.totalCount == 0) return [];
+    localDataFromApi = localDataFromApi.items[0].item;
+    localDataFromApi = localDataFromApi.map((item) => {
+      return {
+        code: user.code,
+        useOfRenewalRequestRights: item['갱신요구권사용'],
+        contractClassification: item['계약구분'],
+        yearOfConstruction: item['건축년도'],
+        term: item['계약기간'],
+        size: item['전용면적'],
+        year: item['년'],
+        beopjeongDong: item['법정동'],
+        depositAmount: item['보증금액'],
+        apart: item['아파트'],
+        month: item['월'],
+        monthlyRentAmount: item['월세금액'],
+        day: item['일'],
+        jibun: item['지번'],
+        floor: item['층'],
+        previousContractDeposit: item['종전계약보증금'],
+        previousContractMonthlyRent: item['종전계약월세'],
+      };
+    });
+    return localDataFromApi;
+  }
+  getFilteredRTMSData<T extends RTMSDataSvcAptRent_Inf>(
     user: UserInterface,
-    homes: RTMSDataSvcSHRent_Inf[],
+    homes: T[],
   ) {
     homes = homes.filter(
-      (home) =>
+      (home: T) =>
         Number(home.size[0]) < user.size * 10 + 30 &&
         Number(home.depositAmount[0]) >= user.price[0] * 1000 &&
         Number(home.depositAmount[0]) <= user.price[1] * 1000 &&
@@ -66,14 +99,16 @@ export class ScrapService {
     console.log(user, homes);
     return homes;
   }
-  //국토교통부 단독/다가구 전월세 자료
-  async getRTMSDataSvcSHRent(
+  //국토교통부 단독/다가구 | 아파트 전월세 자료
+  async getRTMSData(
+    type: string,
     CODE: string,
     YYYYMM: string,
     TRY_COUNT: number,
   ): Promise<any> {
-    const url =
-      'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent';
+    const url = `http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/${
+      type === 'villa' ? 'getRTMSDataSvcSHRent' : 'getRTMSDataSvcAptRent'
+    }`;
     let queryParams =
       '?' +
       encodeURIComponent('serviceKey') +
@@ -105,7 +140,8 @@ export class ScrapService {
                 TRY_COUNT < this.MAX_TRY_COUNT
               ) {
                 res(
-                  this.getRTMSDataSvcSHRent(
+                  this.getRTMSData(
+                    'villa',
                     CODE,
                     getOneMonthBefore(YYYYMM),
                     TRY_COUNT + 1,

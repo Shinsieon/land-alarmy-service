@@ -3,7 +3,10 @@ import { AppService } from './app.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserService } from './user/user.service';
 import { ScrapService } from './scrap/scrap.service';
-import { RTMSDataSvcSHRent_Inf } from './interface/RTMSDataSvcSHRent.interface';
+import {
+  RTMSDataSvcAptRent_Inf,
+  RTMSDataSvcSHRent_Inf,
+} from './interface/RTMSDataSvc.interface';
 import { SmsService } from './sms/sms.service';
 
 @Controller()
@@ -20,19 +23,22 @@ export class AppController {
     //TODO: 비지니스 로직을 작성해주세요.
     //this.logger.log('10초마다 정기적으로 실행되는 코드 입니다.');
     const users = await this.userService.getAll();
-    let LocalInfos: { [key: string]: RTMSDataSvcSHRent_Inf[] } = {};
+    let LocalInfos: { [key: string]: RTMSDataSvcAptRent_Inf[] } = {};
 
     for (const phoneNumber of Object.keys(users)) {
       const user = users[phoneNumber];
       let localInfo =
         LocalInfos[user.code] ||
-        (await this.scrapService.getUserRTMSDataSvcSHRent(user));
+        (await this.scrapService.getUserRTMSDataSvcApartRent<RTMSDataSvcAptRent_Inf>(
+          user,
+        ));
       LocalInfos[user.code] = localInfo;
 
-      const filteredHomes = this.scrapService.getFilteredRTMSDataSvcSHRent(
-        user,
-        localInfo,
-      );
+      const filteredHomes =
+        this.scrapService.getFilteredRTMSData<RTMSDataSvcAptRent_Inf>(
+          user,
+          localInfo,
+        );
       if (filteredHomes.length > 0) {
         this.smsService.sendSms(
           phoneNumber,
