@@ -39,14 +39,17 @@ export class AppController {
           user,
           localInfo,
         );
+      console.log(filteredHomes);
       if (filteredHomes.length > 0) {
         this.smsService.sendSms(
           phoneNumber,
-          filteredHomes.map((home) => home.code).toString(),
+          filteredHomes
+            .map((home) => home.apart[0].toString())
+            .join('/')
+            .toString(),
         );
       }
     }
-    //조건에 맞는 매물을 users 객체에 넣습니다.
   }
   onApplicationBootstrap() {
     this.run();

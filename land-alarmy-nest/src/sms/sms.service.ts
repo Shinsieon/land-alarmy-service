@@ -37,7 +37,9 @@ export class SmsService {
       )
       .then((res) => {
         if (res.data.statusCode == '202')
-          console.log(`${to} 에게 정상적으로 전송했습니다.`);
+          console.log(
+            `${to} 에게 ${content.length} 건을 정상적으로 전송했습니다.`,
+          );
       });
   }
   makeSignature() {

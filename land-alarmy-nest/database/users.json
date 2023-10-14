@@ -1,14 +1,1 @@
-{
-  "01087265402": {
-    "code": "1117000000",
-    "tradeType": {
-      "all": true,
-      "buy": false,
-      "rentForYear": false,
-      "rentForMonth": false
-    },
-    "price": [0, 10],
-    "size": 0,
-    "phoneNumber": "01087265402"
-  }
-}
+{"01087265402":{"code":"1117000000","tradeType":{"all":true,"buy":false,"rentForYear":false,"rentForMonth":false},"price":[10,100],"size":3,"phoneNumber":"01087265402"}}

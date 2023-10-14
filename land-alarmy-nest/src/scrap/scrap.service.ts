@@ -81,22 +81,22 @@ export class ScrapService {
         previousContractMonthlyRent: item['종전계약월세'],
       };
     });
+    console.log(`조회된 데이터 : ${localDataFromApi.length} 건`);
     return localDataFromApi;
   }
   getFilteredRTMSData<T extends RTMSDataSvcAptRent_Inf>(
     user: UserInterface,
     homes: T[],
   ) {
+    console.log(user);
     homes = homes.filter(
       (home: T) =>
-        Number(home.size[0]) < user.size * 10 + 30 &&
-        Number(home.depositAmount[0]) >= user.price[0] * 1000 &&
-        Number(home.depositAmount[0]) <= user.price[1] * 1000 &&
-        (user.tradeType.all === true || user.tradeType.rentForMonth === true) &&
-        home.monthlyRentAmount[0],
+        Number(home.size[0]) < user.size * 10 + 10 &&
+        Number(home.depositAmount[0].replace(',', '')) >=
+          user.price[0] * 1000 &&
+        Number(home.depositAmount[0].replace(',', '')) <= user.price[1] * 1000,
     );
 
-    console.log(user, homes);
     return homes;
   }
   //국토교통부 단독/다가구 | 아파트 전월세 자료
